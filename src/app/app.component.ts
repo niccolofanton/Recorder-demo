@@ -33,7 +33,7 @@ export class AppComponent {
       this.source = this.ctx.createMediaStreamSource(stream);
 
       this.recorder = new Recorder({
-        encoderPath: "https://culo.s3.eu-south-1.amazonaws.com/waveWorker.min.js",
+        encoderPath: "https://culo.s3.eu-south-1.amazonaws.com/encoderWorker.min.js",
         sourceNode: this.source
       });
 
