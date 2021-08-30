@@ -1,0 +1,13 @@
+<pre>{{streamSettings | json}}</pre>
+
+<div *ngFor="let audio of audios">
+
+  <audio controls>
+    <source src="audio" type="audio/ogg">
+  </audio>
+</div>
+
+
+
+<button (click)="startRecording()" > start </button>
+<button (click)="stopRecording()" > stop </button>
