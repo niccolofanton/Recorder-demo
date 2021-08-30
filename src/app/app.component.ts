@@ -8,7 +8,7 @@ const CONSTRAINTS = {
     autoGainControl: false,
     sampleRate: 44100,
     channelCount: 2,
-    sampleSize: 16
+    // sampleSize: 16
   }
 };
 
@@ -33,18 +33,29 @@ export class AppComponent {
       this.source = this.ctx.createMediaStreamSource(stream);
 
       this.recorder = new Recorder({
-        numberOfChannels: 2,
-        encoderPath:
-          'https://culo.s3.eu-south-1.amazonaws.com/encoderWorker.min.js',
+        encoderPath: "https://culo.s3.eu-south-1.amazonaws.com/waveWorker.min.js",
         sourceNode: this.source
       });
 
-      this.recorder.ondataavailable = function(typedArray) {
-        var dataBlob = new Blob([typedArray], { type: 'audio/ogg' });
-        var fileName = new Date().toISOString() + '.ogg';
-        var url = URL.createObjectURL(dataBlob);
-        console.log(url)
-        this.audios.push(url)
+      this.recorder.ondataavailable = (typedArray) => {
+        var dataBlob = new Blob([typedArray], { type: "audio/ogg" });
+          var fileName = new Date().toISOString() + ".ogg";
+          var url = URL.createObjectURL(dataBlob);
+
+          var audio = document.createElement('audio');
+          audio.controls = true;
+          audio.src = url;
+
+          var link = document.createElement('a');
+          link.href = url;
+          link.download = fileName;
+          link.innerHTML = link.download;
+
+          var li = document.createElement('li');
+          li.appendChild(link);
+          li.appendChild(audio);
+
+          document.getElementById('recordingslist').appendChild(li);
       };
 
       this.recorder.start()
@@ -58,16 +69,20 @@ export class AppComponent {
 
    this.recorder.stop();
 
-  //  this.source?.disconnect();
-   this.ctx?.close();
+   setTimeout(()=> {
+      //  this.source?.disconnect();
+      this.ctx?.close();
 
-   this.ctx = null;
-   this.source = null;
+      this.ctx = null;
+      this.source = null;
 
-   this.recorder.ondataavailable = () => {};
-   this.recorder.start = () => {};
-   this.recorder?.close()
-   this.recorder = null;
+      this.recorder.ondataavailable = () => {};
+      this.recorder.start = () => {};
+      this.recorder?.close()
+      this.recorder = null;
+   },3000)
+
+  
 
   }
 }
